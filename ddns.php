@@ -1,7 +1,10 @@
 <?php
 // error_reporting(0);
 require __DIR__.'/dnspod.php';
-require __DIR__.'/config.php';
+require __DIR__.'/config.php'; // pseudo config
+if (file_exists(__DIR__.'/../config.php')) {
+    require __DIR__.'/../config.php';
+}
 
 $dnsRecord = new DnsRecord();
 $dnsRecord->domainID = $CONFIG_API->domainID;
