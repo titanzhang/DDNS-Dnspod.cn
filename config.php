@@ -1,8 +1,8 @@
 <?php
 
-$CONFIG_API = (object) {
-	"apiID" => "1234",
-	"apiToken" => "daau35dd4ei4",
-	"domainID" => "345666",
-	"subDomain" => "us"
-}
+$CONFIG_API = (object) array(
+	"apiID" => "12234",
+	"apiToken" => "24435dfewr9eb9240adfewqrcdd",
+	"domainID" => "123456",
+	"subDomain" => "your_sub_domain"
+);
