@@ -19,7 +19,7 @@ class dnspod {
 
     public function apiCall($api, $data) {
         if ($api == '' || !is_array($data)) {
-            $this->message('danger', 'Internal Error：Invalid arguments', '');
+            $this->message('Error', 'API not specified');
         }
 
         $api = 'https://dnsapi.cn/' . $api;
@@ -28,35 +28,35 @@ class dnspod {
 
         $result = $this->postData($api, $data);
         if (!$result) {
-            $this->message('danger', 'Internal Error: fail to call API', '');
+            $this->message('Error', 'Fail to call API '.$api);
         }
 
         $results = @json_decode($result, 1);
         if (!is_array($results)) {
-            $this->message('danger', 'Internal Error：Invalid response format', '');
+            $this->message('Error', 'Invalid response format');
             var_dump($result);
         }
         
         if ($results['status']['code'] != 1 && $results['status']['code'] != 50) {
-            $this->message('danger', $results['status']['message'], -1);
+            $this->message('Error', 'Server response: '.$results['status']['message']);
         }
         
         return $results;
     }
 
     public function message($status, $message) {
-        $text = $status."\t".$message."\n";
+        $text = $status.":\t".$message."\n";
         exit($text);
     }
 
     private function postData($url, $data) {
         if ($url == '' || !is_array($data)) {
-            $this->message('danger', 'Internal Error：Invalid parameter', '');
+            $this->message('Error', 'Invalid API or parameter');
         }
 
         $ch = @curl_init();
         if (!$ch) {
-            $this->message('danger', 'Internal Error：CURL not supported', '');
+            $this->message('Error', 'CURL not supported');
         }
 
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -79,12 +79,12 @@ class dnspod {
 
     public function getData($url) {
         if ($url == '') {
-            $this->message('Error', 'Internal Error：Invalid parameter', '');
+            $this->message('Error', 'GET: URL not specified');
         }
 
         $ch = @curl_init();
         if (!$ch) {
-            $this->message('Error', 'Internal Error：CURL not supported', '');
+            $this->message('Error', 'GET: CURL not supported', '');
         }
 
         curl_setopt($ch, CURLOPT_URL, $url);

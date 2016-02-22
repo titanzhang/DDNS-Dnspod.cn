@@ -40,7 +40,7 @@ if ($myIP == $dnsRecord->ipAddress) {
 $dnsRecord->ipAddress = $myIP;
 $response = $dnspod->apiCall('Record.Modify',
     array('domain_id' => $dnsRecord->domainID,
-        'record_id' => $dnsRecord->recodeID,
+        'record_id' => $dnsRecord->recordID,
         'sub_domain' => $dnsRecord->subDomain,
         'record_type' => $dnsRecord->recordType,
         'record_line' => $dnsRecord->recordLine,
