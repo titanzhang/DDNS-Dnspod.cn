@@ -25,7 +25,7 @@ if (count($records) < 1) {
 }
 $dnsRecord->ipAddress = $records[0]["value"];
 $dnsRecord->recordID = $records[0]["id"];
-$dnsRecord->recordLine = $records[0]["line"];
+$dnsRecord->recordLine = strtolower($records[0]["line"]);
 $dnsRecord->recordType = $records[0]["type"];
 
 // Get my IP address
