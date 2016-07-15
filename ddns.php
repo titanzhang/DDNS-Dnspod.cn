@@ -11,7 +11,9 @@ $dnsRecord->domainID = $CONFIG_API->domainID;
 $dnsRecord->subDomain = $CONFIG_API->subDomain;
 
 // Get DNS record
-$dnspod = new dnspod($CONFIG_API->apiID, $CONFIG_API->apiToken);
+$dnspod = new dnspod($CONFIG_API->globalServer,
+                     $CONFIG_API->apiID,
+                     $CONFIG_API->apiToken);
 $response = $dnspod->apiCall('Record.List',
     array('domain_id' => $dnsRecord->domainID,
         'sub_domain' => $dnsRecord->subDomain

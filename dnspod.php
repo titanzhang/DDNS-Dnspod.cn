@@ -12,7 +12,8 @@ class dnspod {
     private $apiID;
     private $apiToken;
 
-    public function __construct($apiID, $apiToken) {
+    public function __construct($is_global_serv, $apiID, $apiToken) {
+        $this->is_global_serv = $is_global_serv;
         $this->apiToken = $apiToken;
         $this->apiID = $apiID;
     }
@@ -22,8 +23,17 @@ class dnspod {
             $this->message('Error', 'API not specified');
         }
 
-        $api = 'https://dnsapi.cn/' . $api;
-        $data = array_merge($data, array('login_token' => $this->apiID.",".$this->apiToken,
+        if ($this->is_global_serv) {
+            $api = 'https://api.dnspod.com/' . $api;
+            $token_key = 'user_token';
+            
+        }
+        else {
+            $api = 'https://dnsapi.cn/' . $api;
+            $token_key = 'login_token';
+        }
+        
+        $data = array_merge($data, array($token_key => $this->apiID.','.$this->apiToken,
             'format' => 'json', 'lang' => 'en', 'error_on_empty' => 'no'));
 
         $result = $this->postData($api, $data);
