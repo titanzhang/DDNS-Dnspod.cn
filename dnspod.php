@@ -39,12 +39,14 @@ class dnspod {
         $result = $this->postData($api, $data);
         if (!$result) {
             $this->message('Error', 'Fail to call API '.$api);
+            return;
         }
 
         $results = @json_decode($result, 1);
         if (!is_array($results)) {
             $this->message('Error', 'Invalid response format');
             var_dump($result);
+            return;
         }
         
         if ($results['status']['code'] != 1 && $results['status']['code'] != 50) {
@@ -56,7 +58,7 @@ class dnspod {
 
     public function message($status, $message) {
         $text = $status.":\t".$message."\n";
-        exit($text);
+        echo($text);
     }
 
     private function postData($url, $data) {
