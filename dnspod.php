@@ -51,6 +51,7 @@ class dnspod {
         
         if ($results['status']['code'] != 1 && $results['status']['code'] != 50) {
             $this->message('Error', 'Server response: '.$results['status']['message']);
+            return;
         }
         
         return $results;

@@ -67,18 +67,34 @@ foreach($records as $record)
     $dnsRecord->recordLine = strtolower($record["line"]);
     $dnsRecord->recordType = $record["type"];
 
-    if ($myIP == $dnsRecord->ipAddress || $myIPv6 == $dnsRecord->ipAddress) {
-        echo("Notice: IP does not change\n");
-        continue;
-    }
-
     // Update DNS record
-    if ($dnsRecord->recordType == "A") {
-        $dnsRecord->ipAddress = $myIP;
+    $needUpdate = false;
+    switch($dnsRecord->recordType) {
+        case  'A':
+            if (!$myIP) break;
+            if ($myIP == $dnsRecord->ipAddress) {
+                echo("Notice: IP does not change\n");
+            }
+            else {
+                $needUpdate = true;
+                $dnsRecord->ipAddress = $myIP;
+                $myIP = '';
+            }
+            break;
+        case 'AAAA':
+            if (!$myIPv6) break;
+            if ($myIPv6 == $dnsRecord->ipAddress) {
+                echo("Notice: IP(v6) does not change\n");
+            }
+            else {
+                $needUpdate = true;
+                $dnsRecord->ipAddress = $myIPv6;
+                $myIPv6 = '';
+            }
+            break;
+        default:
     }
-    else {
-        $dnsRecord->ipAddress = $myIPv6;
-    }
+    if (!$needUpdate) continue;
     updateRecord($dnspod, $dnsRecord);
 
     echo("Notice: IP change to ".$dnsRecord->ipAddress."\n");
