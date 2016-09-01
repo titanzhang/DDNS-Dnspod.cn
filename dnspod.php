@@ -12,7 +12,8 @@ class dnspod {
     private $apiID;
     private $apiToken;
 
-    public function __construct($apiID, $apiToken) {
+    public function __construct($is_global_serv, $apiID, $apiToken) {
+        $this->is_global_serv = $is_global_serv;
         $this->apiToken = $apiToken;
         $this->apiID = $apiID;
     }
@@ -22,23 +23,35 @@ class dnspod {
             $this->message('Error', 'API not specified');
         }
 
-        $api = 'https://dnsapi.cn/' . $api;
-        $data = array_merge($data, array('login_token' => $this->apiID.",".$this->apiToken,
+        if ($this->is_global_serv) {
+            $api = 'https://api.dnspod.com/' . $api;
+            $token_key = 'user_token';
+            
+        }
+        else {
+            $api = 'https://dnsapi.cn/' . $api;
+            $token_key = 'login_token';
+        }
+        
+        $data = array_merge($data, array($token_key => $this->apiID.','.$this->apiToken,
             'format' => 'json', 'lang' => 'en', 'error_on_empty' => 'no'));
 
         $result = $this->postData($api, $data);
         if (!$result) {
             $this->message('Error', 'Fail to call API '.$api);
+            return;
         }
 
         $results = @json_decode($result, 1);
         if (!is_array($results)) {
             $this->message('Error', 'Invalid response format');
             var_dump($result);
+            return;
         }
         
         if ($results['status']['code'] != 1 && $results['status']['code'] != 50) {
             $this->message('Error', 'Server response: '.$results['status']['message']);
+            return;
         }
         
         return $results;
@@ -46,7 +59,7 @@ class dnspod {
 
     public function message($status, $message) {
         $text = $status.":\t".$message."\n";
-        exit($text);
+        echo($text);
     }
 
     private function postData($url, $data) {
